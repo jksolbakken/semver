@@ -32,4 +32,28 @@ class SemVerTest {
         assertEquals(3, semVer.patch)
     }
 
+    @Test
+    fun `Prerelease versions are recognized`() {
+        val semVer = SemVer("1.2.3-whatever.yolo")
+        assertEquals(1, semVer.major)
+        assertEquals(2, semVer.minor)
+        assertEquals(3, semVer.patch)
+        assertEquals("whatever.yolo", semVer.prerelease)
+    }
+
+    @Test
+    fun `Sort by major, minor and patch`() {
+        val unsorted = listOf(
+            SemVer("1.0.0"), SemVer("2.0.0"), SemVer("3.0.0"),
+            SemVer("1.1.0"), SemVer("1.2.0"), SemVer("1.3.0"),
+            SemVer("1.0.1"), SemVer("1.0.2"), SemVer("1.0.3")
+        )
+        val expected = listOf(
+            SemVer("1.0.0"), SemVer("1.0.1"), SemVer("1.0.2"),
+            SemVer("1.0.3"), SemVer("1.1.0"), SemVer("1.2.0"),
+            SemVer("1.3.0"), SemVer("2.0.0"), SemVer("3.0.0")
+        )
+        assertEquals(expected, unsorted.sorted())
+    }
+
 }

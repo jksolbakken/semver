@@ -1,29 +1,36 @@
 package no.jksolbakken.semver
 
-class SemVer(rawValue: String): Comparable<SemVer> {
+data class SemVer(val rawValue: String): Comparable<SemVer> {
     val major: Int
     val minor: Int
     val patch: Int
     val prerelease: String?
 
     init {
-        val parts = rawValue.split(".").also {
-            require(it.size == 3 && it.all { it.isNotBlank() })
+        val periodIndices = buildList {
+            for (idx in rawValue.indices) { if (rawValue[idx] == '.') add(idx) }
         }
-        major = parts[0].toInt()
-        minor = parts[1].toInt()
-        if (parts[2].contains('-')) {
-            val patchString = parts[2].substringBefore('-')
+        require(periodIndices.size >= 2) {
+            "Invalid SemVer '$rawValue'"
+        }
+        major = rawValue.substring(0, periodIndices[0]).toInt()
+        minor = rawValue.substring(periodIndices[0] + 1, periodIndices[1]).toInt()
+        val remainder = rawValue.substring(periodIndices[1] + 1)
+        if (remainder.contains('-')) {
+            val patchString = remainder.substringBefore('-')
             patch = patchString.toInt()
-            prerelease = parts[2].substringAfter('-').ifEmpty { null }
+            prerelease = remainder.substringAfter('-').ifEmpty { null }
         } else {
-            patch = parts[2].toInt()
+            patch = remainder.toInt()
             prerelease = null
         }
     }
 
     override fun compareTo(other: SemVer): Int {
-        TODO("Not yet implemented")
+        if (major != other.major) return major.compareTo(other.major)
+        if (minor != other.minor) return minor.compareTo(other.minor)
+        if (patch != other.patch) return patch.compareTo(other.patch)
+        return 0
     }
 
 }
