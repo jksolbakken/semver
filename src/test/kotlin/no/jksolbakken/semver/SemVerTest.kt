@@ -56,4 +56,11 @@ class SemVerTest {
         assertEquals(expected, unsorted.sorted())
     }
 
+    @Test
+    fun `A release outranks a prelease `() {
+        val unsorted = listOf(SemVer("1.0.0"), SemVer("1.0.0-alpha"))
+        val expected = listOf(SemVer("1.0.0-alpha"), SemVer("1.0.0"))
+        assertEquals(expected, unsorted.sorted())
+    }
+
 }

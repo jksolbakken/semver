@@ -30,6 +30,9 @@ data class SemVer(val rawValue: String): Comparable<SemVer> {
         if (major != other.major) return major.compareTo(other.major)
         if (minor != other.minor) return minor.compareTo(other.minor)
         if (patch != other.patch) return patch.compareTo(other.patch)
+        if (prerelease == null && other.prerelease == null) return 0
+        if (prerelease == null) return 1
+        if (other.prerelease == null) return -1
         return 0
     }
 
