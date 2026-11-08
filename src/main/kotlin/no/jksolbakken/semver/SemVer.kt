@@ -3,6 +3,10 @@ package no.jksolbakken.semver
 import kotlin.math.min
 import kotlin.math.sign
 
+enum class VersionPart {
+    MAJOR, MINOR, PATCH;
+}
+
 data class SemVer(val rawValue: String): Comparable<SemVer> {
     val major: UInt
     val minor: UInt
@@ -18,8 +22,7 @@ data class SemVer(val rawValue: String): Comparable<SemVer> {
         minor = rawValue.substring(periodIndices[0] + 1, periodIndices[1]).toUInt()
         val remainder = rawValue.substring(periodIndices[1] + 1)
         if (remainder.contains('-')) {
-            val patchString = remainder.substringBefore('-')
-            patch = patchString.toUInt()
+            patch = remainder.substringBefore('-').toUInt()
             prerelease = remainder.substringAfter('-').ifEmpty { null }
         } else {
             patch = remainder.toUInt()
@@ -48,6 +51,12 @@ data class SemVer(val rawValue: String): Comparable<SemVer> {
         }
 
         return sign((other.prerelease.length - prerelease.length).toDouble()).toInt()
+    }
+
+    fun inc(part: VersionPart):SemVer = when (part) {
+        VersionPart.MAJOR -> SemVer("${major.inc()}.$minor.$patch")
+        VersionPart.MINOR -> SemVer("$major.${minor.inc()}.$patch")
+        VersionPart.PATCH -> SemVer("$major.$minor.${patch.inc()}")
     }
 
     override fun toString(): String {

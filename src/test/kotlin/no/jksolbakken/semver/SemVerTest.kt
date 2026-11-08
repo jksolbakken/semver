@@ -1,6 +1,9 @@
 package no.jksolbakken.semver
 
 import kotlin.test.Test
+import no.jksolbakken.semver.VersionPart.MAJOR
+import no.jksolbakken.semver.VersionPart.MINOR
+import no.jksolbakken.semver.VersionPart.PATCH
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
@@ -83,6 +86,14 @@ class SemVerTest {
             SemVer("1.0.0-beta.2"), SemVer("1.0.0-beta.1"),
         )
         assertEquals(expected, unsorted.sorted())
+    }
+
+    @Test
+    fun `increment it`() {
+        val semVer = SemVer("0.0.0")
+        assertEquals(SemVer("1.0.0"), semVer.inc(MAJOR))
+        assertEquals(SemVer("0.1.0"), semVer.inc(MINOR))
+        assertEquals(SemVer("0.0.1"), semVer.inc(PATCH))
     }
 
     @Test
