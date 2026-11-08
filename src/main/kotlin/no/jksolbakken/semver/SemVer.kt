@@ -50,4 +50,8 @@ data class SemVer(val rawValue: String): Comparable<SemVer> {
         return sign((other.prerelease.length - prerelease.length).toDouble()).toInt()
     }
 
+    override fun toString(): String {
+        return "$major.$minor.$patch${if (prerelease != null) "-$prerelease" else ""}"
+    }
+
 }

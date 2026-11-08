@@ -85,5 +85,17 @@ class SemVerTest {
         assertEquals(expected, unsorted.sorted())
     }
 
+    @Test
+    fun `toString() with no prerelease`() {
+        val semVer = SemVer("1.0.0")
+        assertEquals("1.0.0", semVer.toString())
+    }
+
+    @Test
+    fun `toString() with prerelease`() {
+        val semVer = SemVer("1.0.0-yolo")
+        assertEquals("1.0.0-yolo", semVer.toString())
+    }
+
 }
 
